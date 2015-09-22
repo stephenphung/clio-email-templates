@@ -1,0 +1,696 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Monthly Newsletter</title>
+    <style type="text/css">
+      /***********
+      Originally based on The MailChimp Reset from Fabio Carneiro, MailChimp User Experience Design
+      More info and templates on Github: https://github.com/mailchimp/Email-Blueprints
+      http://www.mailchimp.com &amp; http://www.fabio-carneiro.com
+
+      INLINE: Yes.
+      ***********/
+      /* Client-specific Styles */
+      #outlook a {padding: 0;} /* Force Outlook to provide a "view in browser" menu link. */
+      body{width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; margin: 0; padding: 0;}
+      /* Prevent Webkit and Windows Mobile platforms from changing default font sizes, while not breaking desktop design. */
+      .ExternalClass {width:100%;} /* Force Hotmail to display emails at full width */
+      .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing.  More on that: http://www.emailonacid.com/forum/viewthread/43/ */
+      #backgroundContainer{margin:0 ; padding: 0; width: 100% !important; line-height: 100% !important;}
+      /* End reset */
+
+      /* Some sensible defaults for images
+      1. "-ms-interpolation-mode: bicubic" works to help ie properly resize images in IE. (if you are resizing them using the width and height attributes)
+      2. "border:none" removes border when linking images.
+      3. Updated the common Gmail/Hotmail image display fix: Gmail and Hotmail unwantedly adds in an extra space below images when using non IE browsers. You may not always want all of your images to be block elements. Apply the "image_fix" class to any image you need to fix.
+
+      Bring inline: Yes.
+      */
+      img {outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;}
+      a img {border: none;}
+      .image_fix {display: block;}
+
+      /** Yahoo paragraph fix: removes the proper spacing or the paragraph (p) tag. To correct we set the top/bottom margin to 1em in the head of the document. Simple fix with little effect on other styling. NOTE: It is also common to use two breaks instead of the paragraph tag but I think this way is cleaner and more semantic. NOTE: This example recommends 1em. More info on setting web defaults: http://www.w3.org/TR/CSS21/sample.html or http://meiert.com/en/blog/20070922/user-agent-style-sheets/
+
+      Bring inline: Yes.
+      **/
+      p {margin: 0;}
+
+      /** Hotmail header color reset: Hotmail replaces your header color styles with a green color on H2, H3, H4, H5, and H6 tags. In this example, the color is reset to black for a non-linked header, blue for a linked header, red for an active header (limited support), and purple for a visited header (limited support).  Replace with your choice of color. The !important is really what is overriding Hotmail's styling. Hotmail also sets the H1 and H2 tags to the same size.
+      
+      Bring inline: Yes.
+      **/
+      h1, h2, h3, h4, h5, h6 {color: #3B4145 !important;}
+
+      h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {color: #3B4145 !important;}
+
+      h1 a:active, h2 a:active,  h3 a:active, h4 a:active, h5 a:active, h6 a:active {
+        color: #0075BB !important; /* Preferably not the same color as the normal header link color.  There is limited support for psuedo classes in email clients, this was added just for good measure. */
+       }
+
+      h1 a:visited, h2 a:visited,  h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
+        color: #3B4145 !important; /* Preferably not the same color as the normal header link color. There is limited support for psuedo classes in email clients, this was added just for good measure. */
+      }
+
+      /** Outlook 07, 10 Padding issue: These "newer" versions of Outlook add some padding around table cells potentially throwing off your perfectly pixeled table.  The issue can cause added space and also throw off borders completely.  Use this fix in your header or inline to safely fix your table woes.
+
+      More info: http://www.ianhoar.com/2008/04/29/outlook-2007-borders-and-1px-padding-on-table-cells/
+      http://www.campaignmonitor.com/blog/post/3392/1px-borders-padding-on-table-cells-in-outlook-07/
+      
+      H/T @edmelly
+      
+      Bring inline: No.
+      **/
+      table td {border-collapse: collapse;}
+      
+      /** Remove spacing around Outlook 07, 10 tables
+      
+      More info : http://www.campaignmonitor.com/blog/post/3694/removing-spacing-from-around-tables-in-outlook-2007-and-2010/
+      
+      Bring inline: Yes
+      **/
+      table {border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;}
+      
+      /* Styling your links has become much simpler with the new Yahoo.  In fact, it falls in line with the main credo of styling in email, bring your styles inline.  Your link colors will be uniform across clients when brought inline.
+      
+      Bring inline: Yes. */
+      a {color: #0075BB;}
+      a:link {color: #0075BB;}
+      a:visited {color: #0075BB;}
+      a:hover {color: #0075BB;}
+
+      /***************************************************
+      ****************************************************
+      MOBILE TARGETING
+      Use @media queries with care.  You should not bring these styles inline -- so it's recommended to apply them AFTER you bring the other stlying inline.
+      Note: test carefully with Yahoo.
+      Note 2: Don't bring anything below this line inline.
+      ****************************************************
+      ***************************************************/
+      /* NOTE: To properly use @media queries and play nice with yahoo mail, use attribute selectors in place of class, id declarations.
+      table[class=classname]
+      Read more: http://www.campaignmonitor.com/blog/post/3457/media-query-issues-in-yahoo-mail-mobile-email/
+      */
+      @media only screen and (max-device-width: 480px) {
+        /* A nice and clean way to target phone numbers you want clickable and avoid a mobile phone from linking other numbers that look like, but are not phone numbers.  Use these two blocks of code to "unstyle" any numbers that may be linked.  The second block gives you a class to apply with a span tag to the numbers you would like linked and styled.
+        Inspired by Campaign Monitor's article on using phone numbers in email: http://www.campaignmonitor.com/blog/post/3571/using-phone-numbers-in-html-email/.
+        Step 1 (Step 2: line 224)
+        */
+        a[href^="tel"], a[href^="sms"] {
+          text-decoration: none;
+          color: #0075BB; /* or whatever your want */
+          pointer-events: none;
+          cursor: default;
+        }
+        .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+          text-decoration: default;
+          color: #0075BB !important; /* or whatever your want */
+          pointer-events: auto;
+          cursor: default;
+        }
+      }
+      /* More Specific Targeting */
+      @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        /* You guessed it, ipad (tablets, smaller screens, etc) */
+        /* Step 1a: Repeating for the iPad */
+        a[href^="tel"], a[href^="sms"] {
+          text-decoration: none;
+          color: #0075BB; /* or whatever your want */
+          pointer-events: none;
+          cursor: default;
+        }
+        .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+          text-decoration: default;
+          color: #0075BB !important;
+          pointer-events: auto;
+          cursor: default;
+        }
+      }
+
+
+      /* General Styles */
+      h1, h2, h3, h1 a, h2 a, h3 a {
+        color: #3B4145; 
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        font-weight: normal;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1, h1 a {
+        font-size: 24px; 
+        line-height: 140%; 
+      }
+
+      h2, h2 a {
+        font-size: 22px; 
+        line-height: 140%; 
+      }
+
+      h3, h3 a {
+        font-size: 18px; 
+        line-height: 140%; 
+      }
+
+      #emailContainer {
+        max-width: 580px;
+      }
+
+      .topStripContent,
+      .headerContent,
+      .articleType,
+      .articleContent, 
+      .mentionablesContent, 
+      .signatureContent,
+      .footerContent {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;  
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .bodyCell {
+        padding: 0 10px;
+      }
+
+      #backgroundContainer {
+        background-color: #F4F4F4;
+      }
+
+      #topStripContainer {
+        border-bottom: solid 1px #D2D2D2; 
+        padding: 10px 0;
+        width: 100% !important;
+      }
+      .topStripContent {
+        color: #869098; 
+        font-size: 13px;
+      }
+      .topStripContent a {
+        color: #565F65; 
+        text-decoration: underline;
+      }
+
+      #headerContainer {
+        background-color: #F4F4F4;
+        padding: 30px 0px 30px 0px;
+      }
+      .headerLogo img {
+        color: #0075BB;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        font-size: 24px;
+        line-height: 48px;
+        text-align: center;
+      }
+      .headerContent {
+        color: #565F65;
+        font-size: 10px;
+        padding: 20px 0 0 0;
+      }
+      .headerContent span {
+        color: #869098;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        font-size: 16px;
+        text-align: center;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .articleBlockCell {
+        background: #FFFFFF;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+      }
+      .articleImage img {
+        -webkit-border-radius: 5px 5px 0px 0px;
+        -moz-border-radius: 5px 5px 0px 0px;
+        border-radius: 5px 5px 0px 0px;
+        border: 0;
+        height: auto;
+        vertical-align: top;
+        max-width: 580px;
+        width: 100%;
+      }
+      .articleContent {
+        color: #565656;
+        font-size: 13px;
+        line-height: 160%;
+        padding: 60px 60px 60px 60px;
+        text-align:left;
+      }
+      .articleContent h2 {
+        text-align: left;
+      }
+      .articleContent a {
+        font-weight: normal;
+        text-decoration: none;
+      }
+      .articleButtonContent {
+        padding: 0 30px 40px 30px;
+      }
+
+      #mentionablesContainer {
+        background-color: #FFFFFF;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+        -moz-border-radius-topright: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+      .mentionablesBlockCell {
+        padding: 60px 60px 0 60px;
+      }
+      .mentionablesBlockHeading {
+        padding: 0 0 20px 0;
+      }
+      .mentionablesBlockHeading h2 {
+        font-size: 22px;
+        text-align: center;
+      }
+      .mentionablesContent {
+        border-bottom: solid 1px #E6E6E6; 
+        color: #565F65;
+        font-size: 13px;
+        line-height: 160%;
+        padding: 30px 0 30px 0;
+        text-align: left;
+      }
+      .mentionablesContent a {
+        color: #565F65;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      .mentionablesContent span a {
+        color: #0075BB !important;
+        font-weight: normal;
+        text-decoration: none;
+      }
+      #mentionables .two-column {
+        font-size: 0;
+        text-align: center;
+      }
+      #mentionables .column {
+        display: inline-block;
+        max-width: 290px;
+        width: 100%;
+      }
+
+      #signatureContainer {
+        background-color: #FFFFFF;
+        padding: 40px 30px; 
+        -webkit-border-bottom-right-radius: 5px;
+        -webkit-border-bottom-left-radius: 5px;
+        -moz-border-radius-bottomright: 5px;
+        -moz-border-radius-bottomleft: 5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      .signatureContent {
+        color: #565F65; 
+        font-size: 13px;
+        line-height: 160%;
+        text-align: center;
+      }
+      .signatureContent span {
+        color: #565F65;
+        display: inline-block;
+      }
+
+      #footerContainer {
+        background-color: #F4F4F4;
+        padding: 50px 30px 30px 30px;
+      }
+      .footerBlockSocialLinks {
+        padding: 0 10px 0 10px;
+      }
+      .footerBlockSocialLinks img {
+        color: #869098;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+        font-size: 12px;
+        line-height: 48px;
+        text-align: center;
+      }
+      .footerContent {
+        color: #869098;
+        font-size: 13px;
+        line-height: 160%;
+        padding-top: 20px;
+      }
+      .footerContent a {
+        color: #869098;
+        display: inline-block;
+        text-decoration: none;
+        word-break: break-word;
+      }
+      .footerContent .appleLinksGrey, 
+      .footerContent .appleLinksGrey a {
+        color: #869098;
+        text-decoration: none;
+      }
+
+      .spacer {
+        padding:20px 0;
+      }
+
+      @media only screen and (min-width: 602px) {
+        table[id="emailContainer"] {
+          max-width: 580px !important;
+        }
+      }
+
+      @media only screen and (max-width: 601px) {
+        td[id="headerContainer"], 
+        td[class="articleContent"],
+        td[class="mentionablesBlockCell"],
+        td[id="footerContainer"] {
+          padding-right: 20px !important; 
+          padding-left: 20px !important;
+        }
+        img[class="image"] {
+          height: auto !important; 
+          width: 100% !important; 
+          max-width: 580px !important;
+        }
+      }
+
+      @media only screen and (max-width: 480px) {
+        td[class="articleContent"],
+        td[class="mentionablesBlockCell"] {
+          padding-right: 20px !important; 
+          padding-left: 20px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundContainer">
+      <tr>
+        <td align="center" valign="top" class="bodyCell">
+
+          <!-- // BEGIN EMAIL -->
+          <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td align="center" valign="top" id="topStripContainer">
+                <!-- // TOP STRIP BLOCK HERE -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="topStripBlock">
+                  <tr>
+                    <td align="center" valign="top" class="topStripContent">
+                      E-mail displayed wrong? <a href="http://www.clio.com/" target="_blank">View in browser</a>
+                    </td>
+                  </tr>
+                </table>
+                <!-- END TOP STRIP BLOCK // -->
+              </td>
+            </tr>
+          </table>
+
+          <!--[if (gte mso 9)|(IE)]>
+          <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td>
+          <![endif]-->
+
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" id="emailContainer">
+            <tr>
+              <td align="center" valign="top" id="headerContainer">
+                <!-- // HEADER BLOCK HERE -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="headerBlock">
+                  <tr>
+                    <td align="center" valign="top" class="headerLogo">
+                      <a href="http://www.clio.com/" target="_blank">
+                        <img src="logo-clio.jpg" height="48" width="126" alt="Clio" />
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center" valign="top" class="headerContent">
+                      <span>Monthly Newsletter</span>
+                    </td>
+                  </tr>
+                </table>
+                <!-- END HEADER BLOCK // -->
+              </td>
+            </tr>
+
+            <tr>
+              <td align="left" valign="top" id="articleContainer">
+                <!-- // ARTICLE BLOCK HERE -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="articleBlock">
+                  <tr>
+                    <td align="left" valign="top" class="articleBlockCell">
+                      <!-- // ARTICLE #1 HERE -->
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="article">
+                        <tr>
+                          <td align="center" valign="top" class="articleImage">
+                            <div id="article-1-image" class="mktEditable">
+                              <a href="http://www.clio.com/" target="_blank">
+                                <img src="article1image.jpg" class="image" />
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td align="left" valign="top" class="articleContent">
+                            <div id="article-1-content" class="mktEditable">
+                              <h1>Pancetta hamburger short loin pork</h1>
+                              <br/>
+                              <p>Chuck venison ball tip bresaola pork chop. Bacon meatball cupim, venison shoulder chuck bresaola meatloaf ham hock salami porchetta t-bone pig picanha fatback.</p>
+                              <br/>
+                              <a href="http://www.clio.com/">Read more &rsaquo;</a>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                      <!--END ARTICLE #1 // -->
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="spacer">
+                      &nbsp;
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td align="left" valign="top" class="articleBlockCell">
+                      <!-- // ARTICLE #2 HERE -->
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="article">
+                        <tr>
+                          <td align="center" valign="top" class="articleImage">
+                            <div id="article-2-image" class="mktEditable">
+                              <a href="http://www.clio.com/" target="_blank">
+                                <img src="article2image.jpg" class="image" />
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td align="left" valign="top" class="articleContent">
+                            <div id="article-2-content" class="mktEditable">
+                              <h1>Fatback corned beef ball tip brisket</h1>
+                              <br/>
+                              <p>Tongue doner ham hock, prosciutto leberkas pancetta strip steak short loin. Boudin meatball meatloaf, drumstick turducken flank strip steak short loin landjaeger pork chop pig.</p>
+                              <br/>
+                              <a href="http://www.clio.com/" target="_blank">Read more &rsaquo;</a>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                      <!-- END ARTICLE #2 HERE // -->
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="spacer">
+                      &nbsp;
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td align="left" valign="top" class="articleBlockCell">
+                      <!-- // ARTICLE #3 HERE -->
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="article">
+                        <tr>
+                          <td align="center" valign="top" class="articleImage">
+                            <div id="article-3-image" class="mktEditable">
+                              <a href="http://www.clio.com/" target="_blank">
+                                <img src="article3image.jpg" class="image" />
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td align="left" valign="top" class="articleContent">
+                            <div id="article-3-content" class="mktEditable">
+                              <h1>Sausage beef ribs jerky hamburger pastrami biltong turkey</h1>
+                              <br/>
+                              <p>Doner turducken jerky, pork chop venison picanha tenderloin strip steak ham hock pork ball tip prosciutto bresaola. Capicola boudin tri-tip pork chop, beef sirloin beef ribs spare ribs porchetta fatback shoulder ball tip flank.</p>
+                              <br/>
+                              <a href="http://www.clio.com/" target="_blank">Read more &rsaquo;</a>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                      <!-- END ARTICLE #3 // -->
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="spacer">
+                      &nbsp;
+                    </td>
+                  </tr>
+                </table>
+                <!-- END ARTICLE BLOCK // -->
+              </td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top" id="mentionablesContainer">
+
+                <!-- // MORE ARTICLES BLOCK HERE -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="mentionablesBlock">
+                  <tr>
+                    <td align="left" valign="top" class="mentionablesBlockCell">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+                        <tr>
+                          <td align="center" valign="top" class="mentionablesBlockHeading">
+                            <h2>Here's what we're reading</h2>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td align="left" valign="top">
+                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%">
+
+                              <!-- // ARTICLE #1 HERE -->
+                              <tr>
+                                <td align="left" valign="top" class="mentionablesContent">
+                                  <div id="small-article-1-content" class="mktEditable">
+                                    <h3><a href="http://www.clio.com/" target="_blank">Bacon meatball cupim</a></h3>
+                                    <span><a href="http://www.clio.com/" target="_blank">medium.com</a></span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <!-- END ARTICLE #1 // -->
+
+                              <!-- // ARTICLE #2 HERE -->
+                              <tr>
+                                <td align="left" valign="top" class="mentionablesContent">
+                                  <div id="small-article-2-content" class="mktEditable">
+                                    <h3><a href="http://www.clio.com/" target="_blank">Porchetta leberkas ham filet mignon</a></h3>
+                                    <span><a href="http://www.clio.com/" target="_blank">medium.com</a></span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <!-- END ARTICLE #2 // -->
+
+                              <!-- // ARTICLE #3 HERE -->
+                              <tr>
+                                <td align="left" valign="top" class="mentionablesContent">
+                                  <div id="small-article-3-content" class="mktEditable">
+                                    <h3><a href="http://www.clio.com/" target="_blank">Ham hock biltong pancetta beef frankfurter</a></h3>
+                                    <span><a href="http://www.clio.com/" target="_blank">businessinsider.com</a></span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <!-- END ARTICLE #3 // -->
+
+                              <!-- // ARTICLE #4 HERE -->
+                              <tr>
+                                <td align="left" valign="top" class="mentionablesContent">
+                                  <div id="small-article-4-content" class="mktEditable">
+                                    <h3><a href="http://www.clio.com/" target="_blank">Leberkas ribeye bacon</a></h3>
+                                    <span><a href="http://www.clio.com/" target="_blank">jurispage.com</a></span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <!-- END ARTICLE #4 // -->
+
+                            </table>
+                          </td>
+                        </tr>
+
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                <!-- END MORE ARTICLES BLOCK // -->
+              </td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top" id="signatureContainer">
+                <!-- // SIGNATURE BLOCK HERE -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="signatureBlock">
+                  <tr>
+                    <td align="center" valign="top" class="signatureContent">
+                      <p>That's it for this month, thanks for reading!</p>
+                      <p>Have a great day!</p>
+                      <br />
+                      <p>—The Clio Team</p>
+                    </td>
+                  </tr>
+                </table>
+                <!-- END SIGNATURE BLOCK // -->
+              </td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top" id="footerContainer">
+                <!-- // FOOTER BLOCK HERE -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="footerBlock">
+                  <tr>
+                    <td align="center" valign="top">
+                      <table border="0" cellpadding="0" cellspacing="0" width="204" id="footerBlockSocial">
+                        <tr>
+                          <td align="center" valign="top" class="footerBlockSocialLinks">
+                            <a href="https://www.facebook.com/GoClio" target="_blank"><img src="icon-facebook.jpg" height="48" width="48" alt="Facebook" /></a>
+                          </td>
+                          <td align="center" valign="top" class="footerBlockSocialLinks">
+                            <a href="https://twitter.com/goclio" target="_blank"><img src="icon-twitter.jpg" height="48" width="48" alt="Twitter" /></a>
+                          </td>
+                          <td align="center" valign="top" class="footerBlockSocialLinks">
+                            <a href="https://www.linkedin.com/company/clio---legal-practice-management-software" target="_blank"><img src="icon-linkedin.jpg" height="48" width="48" alt="LinkedIn" /></a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center" valign="top">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                          <td align="center" valign="top" class="footerContent">
+                            © 2015 Themis Solutions Inc.
+                            <br />
+                            <span class="appleLinksGrey">333 - 4611 Canada Way Burnaby, BC, V5G 4X3</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                <!-- END FOOTER BLOCK // -->
+              </td>
+            </tr>
+
+          </table>
+          <!-- END EMAIL // -->
+
+          <!--[if (gte mso 9)|(IE)]>
+              </td>
+            </tr>
+          </table>
+          <![endif]-->
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>
